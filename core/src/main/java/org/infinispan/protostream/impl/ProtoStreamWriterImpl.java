@@ -11,6 +11,7 @@ import java.util.List;
 import org.infinispan.protostream.ImmutableSerializationContext;
 import org.infinispan.protostream.MessageMarshaller;
 import org.infinispan.protostream.RawProtoStreamWriter;
+import org.infinispan.protostream.SerializationContext;
 import org.infinispan.protostream.descriptors.FieldDescriptor;
 import org.infinispan.protostream.descriptors.Type;
 import org.jboss.logging.Logger;
@@ -24,11 +25,11 @@ final class ProtoStreamWriterImpl implements MessageMarshaller.ProtoStreamWriter
 
    private static final int CHUNK_SIZE = 4096;
 
-   private final SerializationContextImpl ctx;
+   private final SerializationContext ctx;
 
    private WriteMessageContext messageContext;
 
-   ProtoStreamWriterImpl(SerializationContextImpl ctx) {
+   ProtoStreamWriterImpl(SerializationContext ctx) {
       this.ctx = ctx;
    }
 

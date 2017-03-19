@@ -9,6 +9,7 @@ import org.infinispan.protostream.Message;
 import org.infinispan.protostream.MessageMarshaller;
 import org.infinispan.protostream.RawProtoStreamReader;
 import org.infinispan.protostream.RawProtoStreamWriter;
+import org.infinispan.protostream.SerializationContext;
 import org.infinispan.protostream.UnknownFieldSet;
 import org.infinispan.protostream.UnknownFieldSetHandler;
 import org.infinispan.protostream.descriptors.Descriptor;
@@ -20,7 +21,7 @@ import org.infinispan.protostream.descriptors.FieldDescriptor;
  */
 final class MessageMarshallerDelegate<T> implements BaseMarshallerDelegate<T> {
 
-   private final SerializationContextImpl ctx;
+   private final SerializationContext ctx;
 
    private final MessageMarshaller<T> marshaller;
 
@@ -30,7 +31,7 @@ final class MessageMarshallerDelegate<T> implements BaseMarshallerDelegate<T> {
 
    private final Map<String, FieldDescriptor> fieldsByName;
 
-   public MessageMarshallerDelegate(SerializationContextImpl ctx, MessageMarshaller<T> marshaller, Descriptor messageDescriptor) {
+   public MessageMarshallerDelegate(SerializationContext ctx, MessageMarshaller<T> marshaller, Descriptor messageDescriptor) {
       this.ctx = ctx;
       this.marshaller = marshaller;
       this.messageDescriptor = messageDescriptor;
@@ -64,10 +65,12 @@ final class MessageMarshallerDelegate<T> implements BaseMarshallerDelegate<T> {
    }
 
    @Override
-   public void marshall(FieldDescriptor fieldDescriptor, T message, ProtoStreamWriterImpl writer, RawProtoStreamWriter out) throws IOException {
-      if (writer == null) {
-         writer = new ProtoStreamWriterImpl(ctx);
+   public void marshall(FieldDescriptor fieldDescriptor, T message, MessageMarshaller.ProtoStreamWriter protoWriter, RawProtoStreamWriter out) throws IOException {
+      if (protoWriter == null) {
+    	  protoWriter= new ProtoStreamWriterImpl(ctx);
       }
+      ProtoStreamWriterImpl writer = (ProtoStreamWriterImpl)protoWriter;
+      
       WriteMessageContext messageContext = writer.pushContext(fieldDescriptor, this, out);
 
       marshaller.writeTo(writer, message);
@@ -104,10 +107,11 @@ final class MessageMarshallerDelegate<T> implements BaseMarshallerDelegate<T> {
    }
 
    @Override
-   public T unmarshall(FieldDescriptor fieldDescriptor, ProtoStreamReaderImpl reader, RawProtoStreamReader in) throws IOException {
-      if (reader == null) {
-         reader = new ProtoStreamReaderImpl(ctx);
+   public T unmarshall(FieldDescriptor fieldDescriptor, MessageMarshaller.ProtoStreamReader protoReader, RawProtoStreamReader in) throws IOException {
+      if (protoReader == null) {
+    	  protoReader = new ProtoStreamReaderImpl(ctx);
       }
+      ProtoStreamReaderImpl reader = (ProtoStreamReaderImpl)protoReader;
       ReadMessageContext messageContext = reader.pushContext(fieldDescriptor, this, in);
 
       T message = marshaller.readFrom(reader);

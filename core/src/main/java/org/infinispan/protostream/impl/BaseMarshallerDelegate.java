@@ -3,6 +3,7 @@ package org.infinispan.protostream.impl;
 import java.io.IOException;
 
 import org.infinispan.protostream.BaseMarshaller;
+import org.infinispan.protostream.MessageMarshaller;
 import org.infinispan.protostream.RawProtoStreamReader;
 import org.infinispan.protostream.RawProtoStreamWriter;
 import org.infinispan.protostream.descriptors.FieldDescriptor;
@@ -37,7 +38,7 @@ public interface BaseMarshallerDelegate<T> {
     * @param out             the Protobuf tag output stream (cannot be {@code null})
     * @throws IOException if marshalling fails for some reason
     */
-   void marshall(FieldDescriptor fieldDescriptor, T value, ProtoStreamWriterImpl writer, RawProtoStreamWriter out) throws IOException;
+   void marshall(FieldDescriptor fieldDescriptor, T value, MessageMarshaller.ProtoStreamWriter writer, RawProtoStreamWriter out) throws IOException;
 
    /**
     * Unmarshalls an object.
@@ -50,5 +51,5 @@ public interface BaseMarshallerDelegate<T> {
     * @param in              the Protobuf tag input stream (cannot be {@code null})
     * @throws IOException if unmarshalling fails for some reason
     */
-   T unmarshall(FieldDescriptor fieldDescriptor, ProtoStreamReaderImpl reader, RawProtoStreamReader in) throws IOException;
+   T unmarshall(FieldDescriptor fieldDescriptor, MessageMarshaller.ProtoStreamReader reader, RawProtoStreamReader in) throws IOException;
 }

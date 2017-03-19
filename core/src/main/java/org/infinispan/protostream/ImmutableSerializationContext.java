@@ -6,6 +6,7 @@ import org.infinispan.protostream.descriptors.Descriptor;
 import org.infinispan.protostream.descriptors.EnumDescriptor;
 import org.infinispan.protostream.descriptors.FileDescriptor;
 import org.infinispan.protostream.descriptors.GenericDescriptor;
+import org.infinispan.protostream.impl.BaseMarshallerDelegate;
 
 /**
  * @author anistor@redhat.com
@@ -46,6 +47,15 @@ public interface ImmutableSerializationContext {
 
    <T> BaseMarshaller<T> getMarshaller(Class<T> clazz);
 
+   /**
+    * Marshall delegate with unified interface
+    * @param descriptorFullName
+    * @return
+    */
+   <T> BaseMarshallerDelegate<T> getMarshallerDelegate(String descriptorFullName);
+   
+   <T> BaseMarshallerDelegate<T> getMarshallerDelegate(Class<T> clazz);
+   
    /**
     * Obtains the type name associated with a numeric type id.
     *

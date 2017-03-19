@@ -15,6 +15,7 @@ import java.util.List;
 import org.infinispan.protostream.ImmutableSerializationContext;
 import org.infinispan.protostream.MessageMarshaller;
 import org.infinispan.protostream.RawProtoStreamReader;
+import org.infinispan.protostream.SerializationContext;
 import org.infinispan.protostream.UnknownFieldSet;
 import org.infinispan.protostream.descriptors.FieldDescriptor;
 import org.infinispan.protostream.descriptors.JavaType;
@@ -46,11 +47,11 @@ final class ProtoStreamReaderImpl implements MessageMarshaller.ProtoStreamReader
          Type.SINT64
    );
 
-   private final SerializationContextImpl ctx;
+   private final SerializationContext ctx;
 
    private ReadMessageContext messageContext;
 
-   ProtoStreamReaderImpl(SerializationContextImpl ctx) {
+   ProtoStreamReaderImpl(SerializationContext ctx) {
       this.ctx = ctx;
    }
 

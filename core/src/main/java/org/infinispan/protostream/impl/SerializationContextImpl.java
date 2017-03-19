@@ -237,6 +237,7 @@ public final class SerializationContextImpl implements SerializationContext {
       return getMarshallerDelegate(clazz).getMarshaller();
    }
 
+   @Override
    public <T> BaseMarshallerDelegate<T> getMarshallerDelegate(String descriptorFullName) {
       BaseMarshallerDelegate<T> marshallerDelegate = (BaseMarshallerDelegate<T>) marshallersByName.get(descriptorFullName);
       if (marshallerDelegate == null) {
@@ -245,6 +246,7 @@ public final class SerializationContextImpl implements SerializationContext {
       return marshallerDelegate;
    }
 
+   @Override
    public <T> BaseMarshallerDelegate<T> getMarshallerDelegate(Class<T> clazz) {
       BaseMarshallerDelegate<T> marshallerDelegate = (BaseMarshallerDelegate<T>) marshallersByClass.get(clazz);
       if (marshallerDelegate == null) {
