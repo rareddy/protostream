@@ -10,7 +10,9 @@ import java.util.List;
 
 import org.infinispan.protostream.ImmutableSerializationContext;
 import org.infinispan.protostream.MessageMarshaller;
+import org.infinispan.protostream.ProxyMarshallerDelegate;
 import org.infinispan.protostream.RawProtoStreamWriter;
+import org.infinispan.protostream.SerializationContext;
 import org.infinispan.protostream.descriptors.FieldDescriptor;
 import org.infinispan.protostream.descriptors.Type;
 import org.jboss.logging.Logger;
@@ -24,11 +26,11 @@ final class ProtoStreamWriterImpl implements MessageMarshaller.ProtoStreamWriter
 
    private static final int CHUNK_SIZE = 4096;
 
-   private final SerializationContextImpl ctx;
+   private final SerializationContext ctx;
 
    private WriteMessageContext messageContext;
 
-   ProtoStreamWriterImpl(SerializationContextImpl ctx) {
+   ProtoStreamWriterImpl(SerializationContext ctx) {
       this.ctx = ctx;
    }
 
@@ -476,7 +478,7 @@ final class ProtoStreamWriterImpl implements MessageMarshaller.ProtoStreamWriter
    }
 
    private void writeMessage(FieldDescriptor fd, Object value, Class clazz) throws IOException {
-      BaseMarshallerDelegate marshallerDelegate = ctx.getMarshallerDelegate(clazz);
+      BaseMarshallerDelegate marshallerDelegate = ProxyMarshallerDelegate.getMarshallerDelegate(ctx, clazz);
       ByteArrayOutputStreamEx baos = new ByteArrayOutputStreamEx();
       RawProtoStreamWriter out = RawProtoStreamWriterImpl.newInstance(baos);
       marshallerDelegate.marshall(fd, value, this, out);
@@ -485,14 +487,14 @@ final class ProtoStreamWriterImpl implements MessageMarshaller.ProtoStreamWriter
    }
 
    private void writeGroup(FieldDescriptor fd, Object value, Class clazz) throws IOException {
-      BaseMarshallerDelegate marshallerDelegate = ctx.getMarshallerDelegate(clazz);
+      BaseMarshallerDelegate marshallerDelegate = ProxyMarshallerDelegate.getMarshallerDelegate(ctx, clazz);
       messageContext.out.writeTag(fd.getNumber(), WireFormat.WIRETYPE_START_GROUP);
       marshallerDelegate.marshall(fd, value, this, messageContext.out);
       messageContext.out.writeTag(fd.getNumber(), WireFormat.WIRETYPE_END_GROUP);
    }
 
    private <T extends Enum<T>> void writeEnum(FieldDescriptor fd, T value) throws IOException {
-      BaseMarshallerDelegate<T> marshallerDelegate = (BaseMarshallerDelegate<T>) ctx.getMarshallerDelegate(value.getClass());
+      BaseMarshallerDelegate<T> marshallerDelegate = (BaseMarshallerDelegate<T>) ProxyMarshallerDelegate.getMarshallerDelegate(ctx, value.getClass());
       marshallerDelegate.marshall(fd, value, this, messageContext.out);
    }
 

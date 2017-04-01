@@ -25,7 +25,7 @@ public class MarshallingTest extends AbstractProtoStreamTest {
 
    @Test
    public void testMarshallUser() throws Exception {
-      ImmutableSerializationContext ctx = createContext();
+	   SerializationContext ctx = createContext();
 
       User user = new User();
       user.setId(1);
@@ -57,7 +57,7 @@ public class MarshallingTest extends AbstractProtoStreamTest {
 
    @Test
    public void testMarshallAccount() throws Exception {
-      ImmutableSerializationContext ctx = createContext();
+	   SerializationContext ctx = createContext();
 
       Account account = new Account();
       account.setId(1);

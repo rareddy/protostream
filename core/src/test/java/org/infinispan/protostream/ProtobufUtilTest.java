@@ -23,7 +23,7 @@ public class ProtobufUtilTest extends AbstractProtoStreamTest {
 
    @Test(expected = InvalidProtocolBufferException.class)
    public void testFromByteArrayWithExtraPadding() throws Exception {
-      ImmutableSerializationContext ctx = createContext();
+	   SerializationContext ctx = createContext();
 
       User user = new User();
       user.setId(1);
@@ -43,7 +43,7 @@ public class ProtobufUtilTest extends AbstractProtoStreamTest {
 
    @Test(expected = IllegalStateException.class)
    public void testFromWrappedByteArrayWithExtraPadding() throws Exception {
-      ImmutableSerializationContext ctx = createContext();
+	   SerializationContext ctx = createContext();
 
       User user = new User();
       user.setId(1);
@@ -63,7 +63,7 @@ public class ProtobufUtilTest extends AbstractProtoStreamTest {
 
    @Test
    public void testMessageWrapping() throws Exception {
-      ImmutableSerializationContext ctx = createContext();
+	   SerializationContext ctx = createContext();
 
       User user = new User();
       user.setId(1);
@@ -83,7 +83,7 @@ public class ProtobufUtilTest extends AbstractProtoStreamTest {
 
    @Test
    public void testCanonicalJSON() throws Exception {
-      ImmutableSerializationContext ctx = createContext();
+	   SerializationContext ctx = createContext();
 
       User user = new User();
       user.setId(1);

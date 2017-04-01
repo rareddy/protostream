@@ -14,7 +14,9 @@ import java.util.List;
 
 import org.infinispan.protostream.ImmutableSerializationContext;
 import org.infinispan.protostream.MessageMarshaller;
+import org.infinispan.protostream.ProxyMarshallerDelegate;
 import org.infinispan.protostream.RawProtoStreamReader;
+import org.infinispan.protostream.SerializationContext;
 import org.infinispan.protostream.UnknownFieldSet;
 import org.infinispan.protostream.descriptors.FieldDescriptor;
 import org.infinispan.protostream.descriptors.JavaType;
@@ -46,11 +48,11 @@ final class ProtoStreamReaderImpl implements MessageMarshaller.ProtoStreamReader
          Type.SINT64
    );
 
-   private final SerializationContextImpl ctx;
+   private final SerializationContext ctx;
 
    private ReadMessageContext messageContext;
 
-   ProtoStreamReaderImpl(SerializationContextImpl ctx) {
+   ProtoStreamReaderImpl(SerializationContext ctx) {
       this.ctx = ctx;
    }
 
@@ -303,7 +305,7 @@ final class ProtoStreamReaderImpl implements MessageMarshaller.ProtoStreamReader
       checkFieldRead(fd, false);
 
       if (fd.getType() == Type.ENUM) {
-         return ctx.getMarshallerDelegate(clazz).unmarshall(fd, this, messageContext.in);
+         return ProxyMarshallerDelegate.getMarshallerDelegate(ctx, clazz).unmarshall(fd, this, messageContext.in);
       }
 
       //todo validate type is compatible with readObject
@@ -334,7 +336,7 @@ final class ProtoStreamReaderImpl implements MessageMarshaller.ProtoStreamReader
     * @param length the actual length of the nested object or -1 if the length should be read from the stream
     */
    private <A> A readNestedObject(FieldDescriptor fd, Class<A> clazz, RawProtoStreamReader in, int length) throws IOException {
-      BaseMarshallerDelegate<A> marshallerDelegate = ctx.getMarshallerDelegate(clazz);
+      BaseMarshallerDelegate<A> marshallerDelegate = ProxyMarshallerDelegate.getMarshallerDelegate(ctx, clazz);
       A a;
       if (fd.getType() == Type.GROUP) {
          a = marshallerDelegate.unmarshall(fd, this, in);

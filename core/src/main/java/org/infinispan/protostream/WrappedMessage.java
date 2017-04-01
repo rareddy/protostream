@@ -157,7 +157,7 @@ public final class WrappedMessage {
       return value;
    }
 
-   public static void writeMessage(ImmutableSerializationContext ctx, RawProtoStreamWriter out, Object t) throws IOException {
+   public static void writeMessage(SerializationContext ctx, RawProtoStreamWriter out, Object t) throws IOException {
       if (t == null) {
          return;
       }
@@ -189,7 +189,7 @@ public final class WrappedMessage {
          out.writeEnum(WRAPPED_ENUM, encodedEnum);
       } else {
          // This is either an unknown primitive type or a message type. Try to use a message marshaller.
-         BaseMarshallerDelegate marshallerDelegate = ((SerializationContextImpl) ctx).getMarshallerDelegate(t.getClass());
+         BaseMarshallerDelegate marshallerDelegate = ProxyMarshallerDelegate.getMarshallerDelegate(ctx, t.getClass());
          ByteArrayOutputStreamEx buffer = new ByteArrayOutputStreamEx();
          RawProtoStreamWriter nestedOut = RawProtoStreamWriterImpl.newInstance(buffer);
          marshallerDelegate.marshall(null, t, null, nestedOut);
@@ -206,7 +206,7 @@ public final class WrappedMessage {
       out.flush();
    }
 
-   public static <T> T readMessage(ImmutableSerializationContext ctx, RawProtoStreamReader in) throws IOException {
+   public static <T> T readMessage(SerializationContext ctx, RawProtoStreamReader in) throws IOException {
       String descriptorFullName = null;
       Integer typeId = null;
       int enumValue = -1;
@@ -298,7 +298,7 @@ public final class WrappedMessage {
       if (typeId != null) {
          descriptorFullName = ctx.getTypeNameById(typeId);
       }
-      BaseMarshallerDelegate marshallerDelegate = ((SerializationContextImpl) ctx).getMarshallerDelegate(descriptorFullName);
+      BaseMarshallerDelegate marshallerDelegate = ProxyMarshallerDelegate.getMarshallerDelegate(ctx, descriptorFullName);
       if (messageBytes != null) {
          // it's a Message type
          RawProtoStreamReader nestedInput = RawProtoStreamReaderImpl.newInstance(messageBytes);

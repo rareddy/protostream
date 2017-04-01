@@ -25,7 +25,7 @@ public class ProtobufParserTest extends AbstractProtoStreamTest {
 
    @Test
    public void testTagHandler() throws Exception {
-      ImmutableSerializationContext ctx = createContext();
+	   SerializationContext ctx = createContext();
 
       User user = new User();
       user.setId(1);
